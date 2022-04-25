@@ -29,18 +29,18 @@ class Spec extends SpecBase {
   test(run("(1 :: Nil).head"), "1")
   test(run("(1 :: Nil).tail"), "Nil")
   test(run("(1 :: 2 :: Nil).tail.head"), "2")
-  // test(run("""
-  //   val x = 1 + 2;
-  //   val y = x * 4 + 1;
-  //   y / (x - 1)
-  // """), "6")
-  // test(run("""
-  //   val (x, y) = (1 + 2, 3 + 4);
-  //   val z = x * y;
-  //   val (a, b, c) = (z, z + z, z + z + z);
-  //   c - b
-  // """), "21")
-  // test(run("x => x + x"), "<function>")
+  test(run("""
+    val x = 1 + 2;
+    val y = x * 4 + 1;
+    y / (x - 1)
+  """), "6")
+  test(run("""
+    val (x, y) = (1 + 2, 3 + 4);
+    val z = x * y;
+    val (a, b, c) = (z, z + z, z + z + z);
+    c - b
+  """), "21")
+  test(run("x => x + x"), "<function>")
   // test(run("(x => x + x)(1)"), "2")
   // test(run("(x => y => x + y)(1)(2)"), "3")
   // test(run("((x, y) => x + y)(1, 2)"), "3")

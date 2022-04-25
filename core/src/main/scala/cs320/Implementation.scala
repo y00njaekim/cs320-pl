@@ -120,10 +120,17 @@ object Implementation extends Template {
         case ConsV(h, t) => t
         case e => error(s"expression should be nonempty list")
       }
-      // // local variable
-      // case Val(name: String, expression: Expr, body: Expr) =>
-      // // anonymous function
-      // case Fun(parameters: List[String], body: Expr) =>
+      // local variable
+      case Val(name: String, expression: Expr, body: Expr) => {
+        val v = myInterp(expression, env)
+        val nenv = env + (name -> v)
+        val res = myInterp(body, nenv)
+        res
+      }
+      // anonymous function
+      case Fun(parameters: List[String], body: Expr) => {
+        CloV(parameters, body, env)
+      }
       // // recursive function
       // case RecFuns(functions: List[FunDef], body: Expr) =>
       // // function application
