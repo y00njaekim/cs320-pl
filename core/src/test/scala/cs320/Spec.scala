@@ -23,12 +23,12 @@ class Spec extends SpecBase {
   test(run("(1, 2 + 3, true)._1"), "1")
   test(run("((42, 3 * 2), false)._1._2"), "6")
   test(run("Nil"), "Nil")
-  // test(run("1 :: 1 + 1 :: Nil"), "(1 :: (2 :: Nil))")
-  // test(run("Nil.isEmpty"), "true")
-  // test(run("(1 :: Nil).isEmpty"), "false")
-  // test(run("(1 :: Nil).head"), "1")
-  // test(run("(1 :: Nil).tail"), "Nil")
-  // test(run("(1 :: 2 :: Nil).tail.head"), "2")
+  test(run("1 :: 1 + 1 :: Nil"), "(1 :: (2 :: Nil))")
+  test(run("Nil.isEmpty"), "true")
+  test(run("(1 :: Nil).isEmpty"), "false")
+  test(run("(1 :: Nil).head"), "1")
+  test(run("(1 :: Nil).tail"), "Nil")
+  test(run("(1 :: 2 :: Nil).tail.head"), "2")
   // test(run("""
   //   val x = 1 + 2;
   //   val y = x * 4 + 1;

@@ -98,22 +98,28 @@ object Implementation extends Template {
       }
       // nil
       case  NilE => NilV
-      // // cons
-      // case ConsE(head: Expr, tail: Expr) => {
-      //   val hV = myInterp(head, env)
-      //   val tV = tail match {
-      //     case TupleE(l) => listInterp(l, env)
-      //     case TupleV(l) => l
-      //     case tail => error(s"v2 must be either the empty list or a nonempty list")
-      //   }
-      //   TupleV(hV :: tV)
-      // }
-      // // is-empty
-      // case Empty(expression: Expr) =>
-      // // head
-      // case Head(expression: Expr) =>
-      // // tail
-      // case Tail(expression: Expr) =>
+      // cons
+      case ConsE(head: Expr, tail: Expr) => {
+        val hV = myInterp(head, env)
+        val tV = myInterp(tail, env)
+        ConsV(hV, tV)
+      }
+      // is-empty
+      case Empty(expression: Expr) => myInterp(expression, env) match {
+        case NilV => BooleanV(true)
+        case ConsV(h, t) => BooleanV(false)
+        case e => error(s"expression should be either empty list or nonempty list")
+      }
+      // head
+      case Head(expression: Expr) => myInterp(expression, env) match {
+        case ConsV(h, t) => h
+        case e => error(s"expression should be nonempty list")
+      }
+      // tail
+      case Tail(expression: Expr) => myInterp(expression, env) match {
+        case ConsV(h, t) => t
+        case e => error(s"expression should be nonempty list")
+      }
       // // local variable
       // case Val(name: String, expression: Expr, body: Expr) =>
       // // anonymous function
