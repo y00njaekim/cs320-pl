@@ -90,34 +90,24 @@ object Implementation extends Template {
       }
       // projection
       case Proj(expression: Expr, index: Int) => {
-        val eV = expression match {
-          case TupleE(e) => e match {
-            case Nil => error(s"expression should not be nil;")
-            case l => {
-              val len = l.length
-              if(len < index) {
-                error(s"expression should longer than index;")
-              } else {
-                listInterp(e, env)
-              }
-            }
-          }
-          case v => error(s"expression should be tuple;")
+        val eV = myInterp(expression, env)
+        val res = eV match {
+          case TupleV(l) => l(index-1)
         }
-        eV(index-1)
+        res
       }
       // nil
       case  NilE => NilV
-      // cons
-      case ConsE(head: Expr, tail: Expr) => {
-        val hV = myInterp(head, env)
-        val tV = tail match {
-          case TupleE(l) => listInterp(l, env)
-          case TupleV(l) => l
-          case tail => error(s"v2 must be either the empty list or a nonempty list")
-        }
-        TupleV(hV :: tV)
-      }
+      // // cons
+      // case ConsE(head: Expr, tail: Expr) => {
+      //   val hV = myInterp(head, env)
+      //   val tV = tail match {
+      //     case TupleE(l) => listInterp(l, env)
+      //     case TupleV(l) => l
+      //     case tail => error(s"v2 must be either the empty list or a nonempty list")
+      //   }
+      //   TupleV(hV :: tV)
+      // }
       // // is-empty
       // case Empty(expression: Expr) =>
       // // head
