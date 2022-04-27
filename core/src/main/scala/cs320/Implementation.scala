@@ -131,15 +131,60 @@ object Implementation extends Template {
       case Fun(parameters: List[String], body: Expr) => {
         CloV(parameters, body, env)
       }
-      // // recursive function
-      // case RecFuns(functions: List[FunDef], body: Expr) =>
-      // // function application
-      // case App(function: Expr, arguments: List[Expr]) =>
+      // recursive function
+      case RecFuns(functions: List[FunDef], body: Expr) => {
+        var nenv : Env = Map[String, Value]()
+        for(e <- functions) {
+          nenv = nenv + (e.name -> CloV(e.parameters, e.body, nenv))
+        }
+        myInterp(body, nenv)
+      }
+      // function application
+      case App(function: Expr, arguments: List[Expr]) => myInterp(function, env) match {
+        case CloV(p, b, e) => {
+          if(p.length != arguments.length) {
+            error(s"arguments length should be equal with CloV's parameter")
+          }
+          var nenv : Env = e
+          for(i <- 1 to arguments.length) {
+            nenv = nenv + (p(i-1) -> myInterp(arguments(i-1), env))
+          }
+          myInterp(b, nenv)
+        }
+        case v => error(s"expression should be interpreted to closure")
+      }
+      // type test
+      case Test(expression: Expr, typ: Type) => {
+        val res = myInterp(expression, env) match {
+          case IntV(v) => typ match {
+            case IntT => BooleanV(true)
+            case t => BooleanV(false)
+          }
+          case BooleanV(v) => typ match {
+            case BooleanT => BooleanV(true)
+            case t => BooleanV(false)
+          }
+          case TupleV(v) => typ match {
+            case TupleT => BooleanV(true)
+            case t => BooleanV(false)
+          }
+          case NilV => typ match {
+            case ListT => BooleanV(true)
+            case t => BooleanV(false)
+          }
+          case ConsV(h, t) => typ match {
+            case ListT => BooleanV(true)
+            case t => BooleanV(false)
+          }
+          case CloV(p, b, e) => typ match {
+            case FunctionT => BooleanV(true)
+            case t => BooleanV(false)
+          }
+        }
+        res
+      }
     }
     val myEnv : Env = Map[String, Value]()
     myInterp(expr, myEnv)
   }
-
-
-
 }
